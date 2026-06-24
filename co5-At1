@@ -1,0 +1,96 @@
+mohamed saif .A
+192521171
+1. Problem Definition
+
+A company must assign jobs to employees so that:
+
+Each job is completed before its deadline.
+An employee cannot do multiple jobs at the same time.
+Employee skills and availability must match job requirements.
+
+Algorithm:
+Backtrack(job):
+
+If all jobs assigned:
+    return success
+
+For each employee:
+    Assign job
+
+    If constraints satisfied:
+        Backtrack(next job)
+
+    Remove assignment
+# Job Scheduling using Backtracking
+
+jobs = ["J1", "J2", "J3"]
+
+# Job duration
+duration = {
+    "J1": 3,
+    "J2": 2,
+    "J3": 4
+}
+
+# Job deadlines
+deadline = {
+    "J1": 5,
+    "J2": 4,
+    "J3": 8
+}
+
+# Available employees
+employees = ["E1", "E2"]
+
+schedule = {}
+
+
+# Check constraints
+def is_valid(job, employee):
+
+    # Employee cannot do more than one job
+    if employee in schedule.values():
+        return False
+
+    # Deadline check
+    if duration[job] > deadline[job]:
+        return False
+
+    return True
+
+
+# Backtracking function
+def backtracking(index):
+
+    # All jobs assigned
+    if index == len(jobs):
+        return True
+
+    job = jobs[index]
+
+    for employee in employees:
+
+        if is_valid(job, employee):
+
+            # Assign job
+            schedule[job] = employee
+
+            # Recursive call
+            if backtracking(index + 1):
+                return True
+
+            # Backtrack
+            del schedule[job]
+
+    return False
+
+
+# Run algorithm
+if backtracking(0):
+
+    print("Feasible Job Schedule:")
+    for job, employee in schedule.items():
+        print(job, "->", employee)
+
+else:
+    print("No valid schedule found")
