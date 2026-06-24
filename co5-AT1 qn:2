@@ -1,0 +1,104 @@
+P
+
+Checking whether a given timetable satisfies all constraints can be done in polynomial time.
+
+NP
+
+A timetable can be verified quickly by checking conflicts.
+
+NP-Complete
+
+The decision problem:
+
+"Can all exams be scheduled using k time slots?"
+
+is NP-Complete because it is equivalent to the graph coloring problem.
+
+NP-Hard
+
+Finding the minimum number of time slots required is NP-Hard.
+
+3. Graph Coloring Model
+Each exam = vertex
+Conflict between exams = edge
+Time slot = color
+Connected exams cannot have the same color (time slot).
+5. Backtracking Algorithm
+
+Steps:
+
+Select an exam.
+Assign a time slot.
+Check conflicts.
+If conflict occurs → backtrack.
+Continue until all exams are scheduled.
+Python Code: Exam Scheduling using Graph Coloring
+# Exam Timetabling using Backtracking Graph Coloring
+
+exams = ["E1", "E2", "E3", "E4"]
+
+# Conflict graph
+graph = {
+    "E1": ["E2", "E3"],
+    "E2": ["E1", "E3"],
+    "E3": ["E1", "E2", "E4"],
+    "E4": ["E3"]
+}
+
+# Available time slots
+slots = 3
+
+schedule = {}
+
+
+# Check whether slot is valid
+def is_valid(exam, slot):
+
+    for neighbour in graph[exam]:
+
+        if neighbour in schedule and schedule[neighbour] == slot:
+            return False
+
+    return True
+
+
+# Backtracking function
+def coloring(index):
+
+    if index == len(exams):
+        return True
+
+    exam = exams[index]
+
+    for slot in range(1, slots + 1):
+
+        if is_valid(exam, slot):
+
+            schedule[exam] = slot
+
+            if coloring(index + 1):
+                return True
+
+            # Backtrack
+            del schedule[exam]
+
+    return False
+
+
+# Execute
+if coloring(0):
+
+    print("Valid Exam Timetable:")
+
+    for exam, slot in schedule.items():
+        print(exam, "=> Time Slot", slot)
+
+else:
+    print("No possible timetable")
+Output
+Valid Exam Timetable:
+
+E1 => Time Slot 1
+E2 => Time Slot 2
+E3 => Time Slot 3
+E4 => Time Slot 1
